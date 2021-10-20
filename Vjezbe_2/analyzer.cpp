@@ -3,7 +3,9 @@
 using namespace EP;
 int main()
 {
-    ElementaryParticle Higgs("Higgs boson", 125.6, true);
+
+
+    ElementaryParticle Higgs("Higgs boson", 126, true);
     ElementaryParticle TopQuark("Top quark", 173.0, false);
 
     
