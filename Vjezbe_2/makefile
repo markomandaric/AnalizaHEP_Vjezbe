@@ -1,9 +1,12 @@
-CXX=g++
-CXXFLAGS=-I.
+CC=g++
+CFLAGS=-I.
 DEPS = ElementaryParticle.h
 
 %.o: %.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-analyzer: analyzer.o ElementaryParticle.o 
-	$(CXX) -o analyzer analyzer.o ElementaryParticle.o  
+analyzer: analyzer.o ElementaryParticle.o
+	$(CC) -o analyzer analyzer.o ElementaryParticle.o
+
+clean:
+	rm -rf *.o analyzer
