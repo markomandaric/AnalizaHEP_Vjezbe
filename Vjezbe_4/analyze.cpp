@@ -1,4 +1,8 @@
 #include <iostream>
+#include <TROOT.h>
+#include <TFile.h>
+#include <TChain.h>
+#include <TApplication.h>
 #include "Analyzer.h"
 #include <cstdlib>
 #include <ctime>
@@ -11,6 +15,7 @@ int main()
 {
     Analyzer *analysis;
     analysis=new Analyzer();
-    analysis->ReadData();
-	return 0;
+    //analysis->ReadData();
+    analysis->ConvertTxtToRootFile();
+    return 0;
 }
