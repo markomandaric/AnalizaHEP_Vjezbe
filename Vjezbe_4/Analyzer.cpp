@@ -20,7 +20,7 @@ void Analyzer::ReadData()
 {
 	
 	ifstream myfile;
-	myfile.open("Analysis.txt");
+	myfile.open("/home/mmandaric/Vjezbe/Vjezbe_4/Analysis.txt");
 	string line,OneName, TwoName;
 	int n;
 	float px1,px2,py1,py2,pz1,pz2,pt1,pt2,E1,E2;
@@ -41,10 +41,10 @@ void Analyzer::ReadData()
 void Analyzer::ConvertTxtToRootFile()
 {
 	ifstream input;
-	input.open("Analysis.txt");
+	input.open("/home/mmandaric/Vjezbe/Vjezbe_4/Analysis.txt");
 
-	TFile* output=output=TFile::Open("Analysis.root", "RECREATE");
-	TTree* tree=new TTree("tree", "Vjezbe_4");
+	TFile* output = output = TFile::Open("Analysis.root", "RECREATE");
+	TTree* tree = new TTree("tree", "Vjezbe_4");
 
 	Int_t n;
 
