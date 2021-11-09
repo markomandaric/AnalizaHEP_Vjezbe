@@ -24,13 +24,13 @@ public :
 
    // Declaration of leaf types
    Float_t         n;
-   Char_t          NameOne[4];
+   TString         NameOne;
    Float_t         px1;
    Float_t         py1;
    Float_t         pz1;
    Float_t         pt1;
    Float_t         E1;
-   Char_t          NameTwo[28];
+   TString         NameTwo;
    Float_t         px2;
    Float_t         py2;
    Float_t         pz2;
