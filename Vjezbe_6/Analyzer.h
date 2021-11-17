@@ -11,6 +11,7 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
+#include <string>
 #include <TLorentzVector.h>
 #include <vector>
 #include <iostream>
@@ -18,6 +19,7 @@
 #include <Riostream.h>
 #include <TColor.h>
 #include <TLegend.h>
+#include <stdio.h>
 // Header file for the classes stored in the TTree if any.
 using namespace std;
 class Analyzer {
@@ -1439,6 +1441,7 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    void Plot();
+
 };
 
 #endif
@@ -1446,6 +1449,7 @@ public :
 #ifdef Analyzer_cxx
 Analyzer::Analyzer(TTree *tree) : fChain(0) 
 {
+//	TFile *f;
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
@@ -1458,6 +1462,7 @@ Analyzer::Analyzer(TTree *tree) : fChain(0)
 
    }
    Init(tree);
+   
 }
 
 Analyzer::~Analyzer()
