@@ -1439,7 +1439,8 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
-   void Plot(TString Path);
+   virtual void Plot(TString Path);
+   virtual void Drawing();
 };
 
 #endif

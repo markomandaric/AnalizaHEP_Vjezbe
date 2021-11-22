@@ -72,9 +72,6 @@ void Analyzer::Plot(TString Path)
 
 	float signalDis, backgroundDis;
 	float co=70.0;	
-	
-	TCanvas* c=new TCanvas("c","c",1000,1000);
-	c->Divide(2,2);
 
 	  if (fChain == 0) return;
 
@@ -111,8 +108,11 @@ void Analyzer::Plot(TString Path)
 			histoBack->Fill(backgroundDis,w);
 			background->Fill(higgs->M(),backgroundDis,w);
 		}
-}
-
+}}
+void Analyzer::Drawing()
+{	
+	TCanvas* c=new TCanvas("c","c",1000,1000);
+	c->Divide(2,2);
 	c->cd(1);
 
 	histoSig->Scale(1.0/histoSig->Integral());
@@ -124,11 +124,7 @@ void Analyzer::Plot(TString Path)
 	histoSig->SetLineWidth(3);
 	histoSig->Draw("hist");	
 	
-	float scale=histoBack->Integral();
-	cout<<scale<<endl;
-	scale=4018.12;
-	
-	histoBack->Scale(1.0/scale);
+	histoBack->Scale(1.0/histoBack->Integral());
 	histoBack->GetXaxis()->SetTitle("D_{kin}");
 	histoBack->GetYaxis()->SetTitle("Events / 0.02");
 	histoBack->GetYaxis()->SetRangeUser(0, 1);
