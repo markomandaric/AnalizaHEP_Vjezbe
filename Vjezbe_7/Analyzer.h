@@ -1429,7 +1429,6 @@ public :
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz10_1_JHUGen;   //!
 
    TH1F *histoSig, *histoBack;
-   TH2F *signal, *background;
    Analyzer();
    virtual ~Analyzer();
    virtual Int_t    Cut(Long64_t entry);
@@ -1440,7 +1439,6 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void Plot(TString Path);
-   virtual void Drawing();
 };
 
 #endif
@@ -1452,10 +1450,8 @@ Analyzer::Analyzer() : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
 	
-	histoSig=new TH1F("histoSig","Kinematic discriminant",50,0,1);
-	histoBack=new TH1F("histoBack","",50,0,1);
-	signal=new TH2F("signal","signal",50,70,170,20,0,1);
-	background=new TH2F("background","background",50,70,170,20,0,1);
+	histoSig=new TH1F("histoSig","Reconstructed mass",50,70,170);
+	histoBack=new TH1F("histoBack","",50,70,170);
 }
 
 Analyzer::~Analyzer()

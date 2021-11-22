@@ -18,6 +18,5 @@ int main()
     analysis=new Analyzer();
     analysis->Plot(path);
     analysis->Plot(path2);
-    analysis->Drawing();
     return 0;
 }

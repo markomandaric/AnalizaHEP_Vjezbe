@@ -5,13 +5,10 @@
 #include <TCanvas.h>
 #include <iostream>
 #include <Riostream.h>
-#include <TH1F.h>
-#include <TH2F.h>
 #include <TColor.h>
 #include <TLegend.h>
 #include <TLorentzVector.h>
 #include <vector>
-#include <TGraph.h>
 #include <THStack.h>
 void Analyzer::Loop()
 {
@@ -53,13 +50,14 @@ void Analyzer::Loop()
 
 void Analyzer::Plot(TString Path)
 {
-	
+
 
         TFile* f = new TFile("/home/public/data/"+Path+"/ZZ4lAnalysis.root");
         TTree* tree = (TTree*) f->Get("ZZTree/candTree");
         Init(tree);
    	TH1F* histoCounter=(TH1F*)f->Get("ZZTree/Counters");
 	float binContent=histoCounter->GetBinContent(40);
+	
 
 	TLorentzVector* higgs = new TLorentzVector();
         TLorentzVector* Z1 = new TLorentzVector();
@@ -68,10 +66,9 @@ void Analyzer::Plot(TString Path)
         TLorentzVector* l2 = new TLorentzVector();
         TLorentzVector* l3 = new TLorentzVector();
         TLorentzVector* l4 = new TLorentzVector();
-	
 
-	float signalDis, backgroundDis;
-	float co=70.0;	
+	TCanvas* c=new TCanvas("c","c",1000,1000);
+	THStack* hs=new THStack("hs","Reconstructed mass");
 
 	  if (fChain == 0) return;
 
@@ -82,9 +79,11 @@ void Analyzer::Plot(TString Path)
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-       
-	
+
+
 	float w=(137.0*1000.0*xsec*overallEventWeight)/binContent;
+
+	
 
 	l1->SetPtEtaPhiM(LepPt->at(0), LepEta->at(0), LepPhi->at(0), 0);
         l2->SetPtEtaPhiM(LepPt->at(1), LepEta->at(1), LepPhi->at(1), 0);
@@ -95,69 +94,37 @@ void Analyzer::Plot(TString Path)
         *Z2 = *l3 + *l4;
 
         *higgs = *Z1 + *Z2;
-
+        
 	if(Path=="ggH125")
-		{
-			signalDis= 1 / (1 + p_QQB_BKG_MCFM / p_GG_SIG_ghg2_1_ghz1_1_JHUGen);
-			histoSig->Fill(signalDis,w);
-			signal->Fill(higgs->M(),signalDis,w);
-		}	
+		histoSig->Fill(higgs->M(),w);
 	else if(Path=="qqZZ")
-		{
-			backgroundDis=1 / (1 + co * p_QQB_BKG_MCFM / p_GG_SIG_ghg2_1_ghz1_1_JHUGen);
-			histoBack->Fill(backgroundDis,w);
-			background->Fill(higgs->M(),backgroundDis,w);
-		}
-}}
-void Analyzer::Drawing()
-{	
-	TCanvas* c=new TCanvas("c","c",1000,1000);
-	c->Divide(2,2);
-	c->cd(1);
+		histoBack->Fill(higgs->M(),w);
+}
 
-	histoSig->Scale(1.0/histoSig->Integral());
-	histoSig->GetXaxis()->SetTitle("D_{kin}");
-	histoSig->GetYaxis()->SetTitle("Events / 0.02");
-	histoSig->GetYaxis()->SetRangeUser(0, 1);
-	histoSig->SetStats(0);
-	histoSig->SetLineColor(kRed);
-	histoSig->SetLineWidth(3);
-	histoSig->Draw("hist");	
-	
-	histoBack->Scale(1.0/histoBack->Integral());
-	histoBack->GetXaxis()->SetTitle("D_{kin}");
-	histoBack->GetYaxis()->SetTitle("Events / 0.02");
-	histoBack->GetYaxis()->SetRangeUser(0, 1);
+	histoBack->GetXaxis()->SetTitle("m_{4l} (GeV)");
+	histoBack->GetYaxis()->SetTitle("Events / 2GeV");
 	histoBack->SetStats(0);
 	histoBack->SetLineColor(kBlue);
-	histoBack->SetLineWidth(3);
-	histoBack->Draw("hist same");
-	
+	histoBack->SetFillColor(kBlue);
+	hs->Add(histoBack);
+
+	histoSig->GetXaxis()->SetTitle("m_{4l} (GeV)");
+	histoSig->GetYaxis()->SetTitle("Events / 2GeV");
+	histoSig->SetStats(0);
+	histoSig->SetLineColor(kRed);
+	histoSig->SetFillColor(kRed);
+	hs->Add(histoSig);
+
+	hs->Draw("hist");
+	hs->GetXaxis()->SetTitle("m_{4l} (GeV)");
+	hs->GetYaxis()->SetTitle("Events / 2GeV");
+
 	TLegend* legend = new TLegend(0.7,0.8,0.9,0.9);
 	legend->SetTextSize(0.03);
-	legend->AddEntry(histoSig,"Signal","l");
-	legend->AddEntry(histoBack,"Background","l");
+	legend->AddEntry(histoSig,"Signal","f");
+	legend->AddEntry(histoBack,"Background","f");
 	legend->Draw();
 
-	c->cd(2);   //skip task4
+	c->SaveAs("Reconstructed_Higgs.png");
+}	
 
-	c->cd(3);
-
-	background->SetTitle("Background");
-	background->GetXaxis()->SetTitle("m_{4l} (GeV)");
-	background->GetYaxis()->SetTitle("D_{kin}");
-	background->SetMinimum(-0.01);
-	background->SetStats(0);
-	background->Draw("COLZ");
-	
-	c->cd(4);
-	
-	signal->SetTitle("Signal");
-	signal->GetXaxis()->SetTitle("m_{4l} (GeV)");
-	signal->GetYaxis()->SetTitle("D_{kin}");
-	signal->SetMinimum(-0.01);
-	signal->SetStats(0);
-	signal->Draw("COLZ");
-	
-	c->SaveAs("2Dhisto.png");
-}
