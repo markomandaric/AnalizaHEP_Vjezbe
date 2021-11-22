@@ -11,16 +11,12 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <string>
-#include <TLorentzVector.h>
 #include <vector>
 #include <iostream>
 #include <cstdlib>
-#include <Riostream.h>
-#include <TColor.h>
-#include <TLegend.h>
-#include <stdio.h>
 #include <TH1F.h>
+#include <TH2F.h>
+
 // Header file for the classes stored in the TTree if any.
 using namespace std;
 class Analyzer {
@@ -1431,7 +1427,9 @@ public :
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz8_1_JHUGen;   //!
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz9_1_JHUGen;   //!
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz10_1_JHUGen;   //!
-   TH1F *signal, *background;
+
+   TH1F *histoSig, *histoBack;
+   TH2F *signal, *background;
    Analyzer();
    virtual ~Analyzer();
    virtual Int_t    Cut(Long64_t entry);
@@ -1442,7 +1440,6 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    void Plot(TString Path);
-   void Drawing();
 };
 
 #endif
@@ -1454,9 +1451,10 @@ Analyzer::Analyzer() : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
 	
-	signal=new TH1F("signal","signal+background",50,70,170);
-	background=new TH1F("background","signal+background",50,70,170);
-	
+	histoSig=new TH1F("histoSig","Kinematic discriminant",50,0,1);
+	histoBack=new TH1F("histoBack","",50,0,1);
+	signal=new TH2F("signal","signal",50,70,170,20,0,1);
+	background=new TH2F("background","background",50,70,170,20,0,1);
 }
 
 Analyzer::~Analyzer()
