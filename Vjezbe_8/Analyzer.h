@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <TH1F.h>
 #include <TH2F.h>
+#include <TF1.h>
 
 // Header file for the classes stored in the TTree if any.
 using namespace std;
@@ -1428,7 +1429,14 @@ public :
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz9_1_JHUGen;   //!
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz10_1_JHUGen;   //!
 
-   TH1F *histoSig, *histoBack;
+   TH1F* histoSig;
+   TH1F* histoBack;
+   TH2F* histo2DSig;
+   TH2F* histo2DBack;
+   TF1 *funcQ;
+   TF1 *funcBW;
+   TF1 *funcQBW;
+
    Analyzer();
    virtual ~Analyzer();
    virtual Int_t    Cut(Long64_t entry);
@@ -1438,7 +1446,8 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
-   virtual void Plot(TString Path);
+
+   virtual void Plot(TString name);
    virtual void Draw();
 };
 
@@ -1451,8 +1460,11 @@ Analyzer::Analyzer() : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
 	
-	histoSig=new TH1F("histoSig","Reconstructed mass",50,70,170);
-	histoBack=new TH1F("histoBack","",50,70,170);
+	 histoSig = new TH1F("histoSig", "Something", 160, 110.0, 150.0);
+   histoBack = new TH1F("histoBack", "", 160, 110.0, 150.0);
+   funcQ = new TF1("funcQ","[0]+[1]*x+[2]*x*x",110.0,150.0);
+   funcBW = new TF1("funcBW","[0]*[1]/((x*x-[2]*[2])*(x*x-[2]*[2])+0.25*[1]*[1])",110.0,150.0);
+   funcQBW = new TF1("funcBW","[0]+[1]*x+[2]*x*x+[3]*[4]/((x*x-[5]*[5])*(x*x-[5]*[5])+0.25*[4]*[4])",110.0,150.0);
 }
 
 Analyzer::~Analyzer()
