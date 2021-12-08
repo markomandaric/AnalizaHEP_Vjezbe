@@ -70,9 +70,8 @@ if (fChain == 0)
 	lnL->SetParName(0,"N");
 	lnL->SetParameter(1,sum);
 	lnL->SetParName(1,"sum");
-	sum=sum/nentries;
-	cout<<"Analitically, tau= "<<sum<<endl;
-	cout<<"Tau using -2lnL gives "<<lnL->GetMinimumX()<<endl;
+	cout<<"Analitically, tau= "<<sum/nentries<<endl;
+	cout<<"Tau using -2lnL gives "<<lnL->GetMinimumX(1.0,10.0)<<endl;
 }
 void Analyzer::Draw()
 {
@@ -85,8 +84,16 @@ void Analyzer::Draw()
 	distribution->Fit(fit);
 	c->cd(2);
 	MaxLike->Draw();
+	TLegend *leg=new TLegend(0.5,0.7,0.9,0.9);
+	leg->AddEntry(MaxLike, "Maximum likelihood function","f");
+	leg->SetTextSize(0.025);
+	leg->Draw();
 	c->cd(3);
 	lnL->Draw();
+	TLegend *legend=new TLegend(0.5,0.7,0.9,0.9);
+	legend->AddEntry(lnL, "-2ln maximum likelihood function","f");
+	legend->SetTextSize(0.022);
+	legend->Draw();
 	c->SaveAs("LnMaxLike.png");
 	
 	
