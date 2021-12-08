@@ -50,13 +50,8 @@ void Analyzer::Plot(TString name)
 	TFile fw("/home/public/data/"+name+"/ZZ4lAnalysis.root"); 
 	TH1F* histoCounter = (TH1F*)fw.Get("ZZTree/Counters");
 
-	funcQ->SetParNames("A", "B", "C");
-	funcBW->SetParNames("D", "#Gamma", "M");
-	funcQBW->SetParNames("A", "B", "C", "D", "#Gamma", "M");
-
-	funcQ->SetParameters(9.57, -0.1262, 0.0004926);
-	funcBW->SetParameters(2580.0, 820.3, 124.6);
-	funcQBW->SetParameters(9.57, -0.1262, 0.0004926, 2580.0, 820.3, 124.6);
+	MaxLike->SetParNames("A", "B", "C", "D_{Higgs}", "#Gamma_{Higgs}", "M_{Higgs}", "D_{Z}", "#Gamma_{Z}", "M_{Z}");
+	MaxLike->SetParameters(-2.789, 0.04629, -0.0001112, 2720.0, 866.4, 124.5, 4737.0, 737.3, 90.83);
 
 	double w, binContent;
 
@@ -95,40 +90,19 @@ void Analyzer::Plot(TString name)
 void Analyzer::Draw()
 {
 	TCanvas* c = new TCanvas("c", "c", 1800, 900);
-	c->Divide(2);
-
+	
 	gPad->SetLeftMargin(0.15);
 	gStyle->SetOptFit();
-
-	c->cd(1);	
-
-	funcQBW->SetTitle("Theoretical model; M (GeV); Events");
-	funcQBW->SetLineColor(kGreen);
-	funcQBW->Draw();
-
-	funcQ->SetLineColor(kBlue);
-	funcQ->Draw("same");
-
-	funcBW->SetLineColor(kRed);
-	funcBW->Draw("same");
-
-	TLegend* legend = new TLegend(0.5,0.8,0.9,0.9);
-	legend->SetTextSize(0.03);
-	legend->AddEntry(funcQ,"Background (quadratic)","l");
-	legend->AddEntry(funcBW,"Signal (Breit Wigner)","l");
-	legend->AddEntry(funcQBW,"Background + signal","l");
-	legend->Draw();
-
-	c->cd(2);		// Data points with fit
-
-	histoBack->SetLineColor(kBlue);
-
+	
+	MaxLike->SetLineColor(kGreen);
+	MaxLike->Draw();
+	
 	histoSig->SetLineColor(kRed);
 	histoSig->Add(histoBack);
-
-	histoSig->Draw("p E1 X0");
+	
 	histoSig->SetTitle("Reconstructed mass; M (GeV); Events");
-	histoSig->Fit(funcQBW);
-
-	c->SaveAs("task1.png");
+	histoSig->Draw("p E1 X0");
+	histoSig->Fit(MaxLike);
+	
+	c->SaveAs("MaximumLikelihood.png");
 }
