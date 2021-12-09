@@ -14,6 +14,5 @@ int main()
     Analyzer *analysis;
     analysis=new Analyzer();
     analysis->Plot();
-    analysis->Draw();
     return 0;
 }

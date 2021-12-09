@@ -45,11 +45,15 @@ void Analyzer::Loop()
 }
 void Analyzer::Plot()
 {
+	double sigma_fit, sigma_analytical, sigma_lower, sigma_upper, tau_fit, tau_ln, min;
+
+
 	fit->SetParameter(0,195.2);
 	fit->SetParName(0,"norm");
 	fit->SetParameter(1,1.201);
 	fit->SetParName(1,"#tau");
-	
+	tau_fit=1.203;//ocitano s grafa
+	sigma_fit=fit->GetParError(1);
 	double sum=0.0;
 if (fChain == 0)
 		return;
@@ -70,11 +74,18 @@ if (fChain == 0)
 	lnL->SetParName(0,"N");
 	lnL->SetParameter(1,sum);
 	lnL->SetParName(1,"sum");
-	cout<<"Analitically, tau= "<<sum/nentries<<endl;
-	cout<<"Tau using -2lnL gives "<<lnL->GetMinimumX(1.0,10.0)<<endl;
-}
-void Analyzer::Draw()
-{
+	//cout<<"Analitically, tau= "<<sum/nentries<<endl;
+	tau_ln=lnL->GetMinimumX(1.0,10.0);
+	//cout<<"Using -2lnL gives tau= "<<tau_ln<<endl;
+	
+	sigma_analytical=sqrt(-pow((sum/nentries),3)/(-1*sum));//nentries*tau-2*sum=sum-2sum=-sum
+
+	tau_ln=lnL->GetMinimumX(1.15,1.3,1.E-10,100,false);
+   min=lnL->GetMinimum(1.15,1.3,1.E-10,100,false);
+   sigma_lower=tau_ln-lnL->GetX(min+1,1.15,1.24,1.E-10,100,false); 
+   sigma_upper=lnL->GetX(min+1,1.24,1.3,1.E-10,100,false)-tau_ln;	
+
+
 	TCanvas *c=new TCanvas("c","c",1800,900);
 	c->Divide(3);
 	c->cd(1);
@@ -96,5 +107,11 @@ void Analyzer::Draw()
 	legend->Draw();
 	c->SaveAs("LnMaxLike.png");
 	
-	
+	 
+   cout << endl << "\t\t############### Results ###############" << endl;
+   cout << " method\t\t\t\t tau \t\tsigma" << endl;
+   cout << "----------------------------------------------------------------------------" << endl;
+   cout << "fit\t\t\t\t" << tau_fit << "\t\t-+ " << sigma_fit << endl;
+   cout << "analytical\t\t\t" << sum/nentries << "\t\t-+ " << sigma_analytical << endl;
+   cout << "-2lnL\t\t\t\t" << tau_ln << "\t\t- " << sigma_lower << "    + " << sigma_upper << endl;	
 }

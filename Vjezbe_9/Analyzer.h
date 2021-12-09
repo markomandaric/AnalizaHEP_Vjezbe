@@ -43,7 +43,6 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void Plot();
-   virtual void Draw();
 };
 
 #endif
@@ -63,8 +62,8 @@ Analyzer::Analyzer(TTree *tree) : fChain(0)
    }
    Init(tree);
 
-	distribution=new TH1F("Distribution","Distribution",100,0,10);
-	fit=new TF1("fit","[0]*(1.0/[1])*exp(-1.0*(1.0/[1])*x)",0,10);
+	distribution=new TH1F("Distribution","Distribution",40,0,8);
+	fit=new TF1("fit","[0]*(1.0/[1])*exp(-1.0*(1.0/[1])*x)",0,8);
 	MaxLike=new TF1("MaxLike","195.2*(1.0/x)*exp(-1.0*(1.0/x)*1.0)",0,10);
 	lnL=new TF1("Ln likelihood","2.0*([0]*log(x)+(1.0/x)*[1])",1.0,1.5);
 }
