@@ -53,7 +53,7 @@ void Analyzer::Plot()
 	fit->SetParameter(1,1.201);
 	fit->SetParName(1,"#tau");
 	tau_fit=1.203;//ocitano s grafa
-	sigma_fit=fit->GetParError(1);
+	sigma_fit=0.042;//ocitano s grafa
 	double sum=0.0;
 if (fChain == 0)
 		return;
