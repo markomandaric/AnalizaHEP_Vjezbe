@@ -19,6 +19,8 @@ int main()
     cout<<analysis->sum_upper(2,2,0.6827)<<endl;
     cout<<analysis->sum_lower(2,2,0.6827)<<endl;
     analysis->Belt(10,0.6827);
-    //analysis->Draw();
+    analysis->Draw(10,0.6827);
+    analysis->Dice(10,0.6827);
+    analysis->Dice(10,0.9544);
     return 0;
 }

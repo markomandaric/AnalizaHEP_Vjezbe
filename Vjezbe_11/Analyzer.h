@@ -23,7 +23,7 @@ class Analyzer{
 	double sum_upper(int m1, int N1, double CL);
 	double sum_lower(int m2, int N2, double CL);
 	void Belt(int N, double C);
-	void Draw();
-	
+	void Draw(int N, double C);
+	void Dice(int N, double C);
 };
 

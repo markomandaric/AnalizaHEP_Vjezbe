@@ -100,6 +100,86 @@ void Analyzer::Belt(int N, double C)
 		}
 }
 
-void Analyzer::Draw()
+void Analyzer::Draw(int N,double C)
 {
+	TH1F *upper, *lower;
+	upper=new TH1F("upper","upper",N,0,N);
+	lower=new TH1F("lower","lower",N,0,N);
+	
+	int r;
+	double p_plus,p_minus;
+	for(r=0;r<=N;r++)
+	{
+		p_plus=sum_upper(r,N,C);
+		p_minus=sum_lower(r,N,C);
+		
+		upper->SetBinContent(r,p_plus);
+		lower->SetBinContent(r,p_minus);
+	}
+	
+	TCanvas *canvas;
+	canvas=new TCanvas("Belt","Belt",1600,900);
+	gStyle->SetOptStat(0);
+	
+	upper->SetMaximum(1.1);
+	upper->SetMinimum(-0.1);
+	lower->SetMaximum(1.1);
+	lower->SetMinimum(-0.1);
+	upper->GetYaxis()->SetRangeUser(0.,1.1);
+	lower->GetYaxis()->SetRangeUser(0.,1.1);
+	upper->GetXaxis()->SetTitle("r / number of successful events");
+	upper->GetYaxis()->SetTitle("p / probability");
+	upper->SetTitle("Belt");
+	
+	TLine *l1,*l2,*l3;
+	
+	
+	l1=new TLine(0,sum_upper(4,N,C),4,sum_upper(4,N,C));
+	l2=new TLine(0,sum_lower(4,N,C),4,sum_lower(4,N,C));
+	l3=new TLine(4,-0.01,4,sum_upper(4,N,C));
+	
+	
+	l1->SetLineColor(kRed);
+	l2->SetLineColor(kRed);
+	l3->SetLineColor(kRed);
+	l1->SetLineStyle(kDashed);
+	l2->SetLineStyle(kDashed);
+	l3->SetLineStyle(kDashed);
+	
+	Int_t color = TColor::GetFreeColorIndex();
+	TColor *colour;
+	colour=new TColor(color,1.,1.,1.);
+	upper->SetFillColor(kBlue);
+	lower->SetFillColor(color);
+
+	upper->Draw();
+	lower->Draw("same");
+	l1->Draw("same");
+	l2->Draw("same");
+	l3->Draw("same");
+	
+	canvas->SaveAs("Belt.png");
+
+}
+void Analyzer::Dice(int N, double C)
+{
+	srand(time(NULL));
+	int i, j, br, s=0;
+	double p_plus, p_minus,p_true=1.0/6;
+
+	for(i=0;i<1000;i++)
+	{
+		br=0;
+		for(j=0;j<N;j++)
+			{
+				if((rand()%6+1)==6)
+				br++;
+			}
+		
+	p_plus=sum_upper(br,N,C);
+	p_minus=sum_lower(br,N,C);	
+	if(p_plus>=p_true && p_minus<=p_true)
+		s++;
+	}
+	cout<<"Number of experiments (out of 1000) that contain p_true in 10 throws in confidence interval of " << C << " is " << s << endl;	
 }
