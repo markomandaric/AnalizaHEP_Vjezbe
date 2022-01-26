@@ -21,5 +21,5 @@ class Analyzer
 	Analyzer();
 	TH1F *histo_chi;
 	void Generate();
-	
+	void pValueScan();
 };

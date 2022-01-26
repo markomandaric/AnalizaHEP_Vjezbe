@@ -16,6 +16,6 @@ int main()
     Analyzer *analysis;
     analysis=new Analyzer();
     analysis->Generate();
-    
+    analysis->pValueScan();
     return 0;
 }
